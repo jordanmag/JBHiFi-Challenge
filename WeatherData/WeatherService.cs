@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using System.Net;
 using WeatherData.Models;
 
 namespace WeatherData
@@ -18,15 +19,30 @@ namespace WeatherData
         {
             var client = _clientFactory.CreateClient();
             var response = await client.GetAsync($"http://api.openweathermap.org/data/2.5/weather?q={city},{country}&appid={_openWeatherMapApiKey}");
-            response.EnsureSuccessStatusCode();
 
-            var stringResult = await response.Content.ReadAsStringAsync();
-            var token = JObject.Parse(stringResult)["weather"];
-            
-            var weatherList = token?.ToObject<List<Weather>>();
-            var description = weatherList?.Select(x => x.Description).ToList();
-            
-            return description;
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                var token = JObject.Parse(result)["weather"];
+                
+                var weatherWithDescription = token.ToObject<List<Weather>>()
+                    .Where(x => x.Description != null);
+
+                if (weatherWithDescription is null)
+                {
+                    return new List<string>();
+                }                    
+
+                return weatherWithDescription.Select(x => x.Description).ToList();
+            }
+            else if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new ArgumentException($"City ({city},{country}) not found");
+            }
+            else
+            {
+                throw new HttpRequestException("Error calling OpenWweather API");
+            }
         }
     }
 }

@@ -6,12 +6,10 @@ namespace WeatherData.Controllers
     [ApiController]
     public class WeatherController : ControllerBase
     {
-        private readonly ILogger<WeatherController> _logger;
         private readonly IWeatherService _weatherService;
 
-        public WeatherController(ILogger<WeatherController> logger, IWeatherService weatherService)
+        public WeatherController(IWeatherService weatherService)
         {
-            _logger = logger;
             _weatherService = weatherService;
         }
 
@@ -21,14 +19,22 @@ namespace WeatherData.Controllers
             try
             {
                 var description = await _weatherService.GetWeatherDescription(city, country);
+
+                if (description.Count == 0)
+                {
+                    return NoContent();
+                }
+
                 return Ok(description);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-                _logger.LogError(ex.Message);
-                return BadRequest(ex.Message);
+                return NotFound(ex.Message);
             }
-
+            catch (HttpRequestException ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

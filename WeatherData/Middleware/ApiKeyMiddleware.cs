@@ -40,7 +40,8 @@ namespace WeatherData.Middleware
 
             var clientRequests = _cache.Get<ClientApiRequests>(clientKey.ToString());
 
-            if (clientRequests != null && DateTime.UtcNow < clientRequests.LastSuccessfulResponseTime.AddMinutes(_rateLimitMinsDuration) 
+            if (clientRequests != null 
+                && DateTime.Now < clientRequests.LastSuccessfulResponseTime.AddMinutes(_rateLimitMinsDuration)
                 && clientRequests.SuccessfulRequests >= _rateLimit)
             {
                 context.Response.StatusCode = 429;
@@ -52,11 +53,11 @@ namespace WeatherData.Middleware
             await _next(context);
         }
 
-        private void UpdateApiRequests(string key, ClientApiRequests? requests)
+        private void UpdateApiRequests(string key, ClientApiRequests requests)
         {
             if (requests != null)
             {
-                requests.LastSuccessfulResponseTime = DateTime.UtcNow;
+                requests.LastSuccessfulResponseTime = DateTime.Now;
                 if (requests.SuccessfulRequests >= _rateLimit)
                 {
                     requests.SuccessfulRequests = 1;
@@ -71,7 +72,7 @@ namespace WeatherData.Middleware
             {
                 var newRequest = new ClientApiRequests
                 {
-                    LastSuccessfulResponseTime = DateTime.UtcNow,
+                    LastSuccessfulResponseTime = DateTime.Now,
                     SuccessfulRequests = 1
                 };
                 _cache.Set<ClientApiRequests>(key, newRequest);
