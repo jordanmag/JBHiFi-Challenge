@@ -2,7 +2,7 @@
 
 namespace WeatherData.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class WeatherController : ControllerBase
     {
@@ -19,12 +19,10 @@ namespace WeatherData.Controllers
             try
             {
                 var description = await _weatherService.GetWeatherDescription(city, country);
-
                 if (description.Count == 0)
                 {
                     return NoContent();
                 }
-
                 return Ok(description);
             }
             catch (ArgumentException ex)
