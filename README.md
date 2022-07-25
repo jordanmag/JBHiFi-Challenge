@@ -23,7 +23,7 @@ Technical and testing notes:
 
 The following <b>unit tests</b> have also been created for the backend weather service:
 
-![image](https://user-images.githubusercontent.com/36960366/179856724-3f0b4690-5dbe-47ce-a665-f3a3ce596362.png)
+![image](https://user-images.githubusercontent.com/36960366/180702656-cf865876-2851-4849-9972-1bd4c6bb577c.png)
 
 
 Improvements I would make on the app as next steps:
