@@ -27,8 +27,6 @@ The following <b>unit tests</b> have also been created for the backend weather s
 
 
 Improvements I would make on the app as next steps:
-- Rate limit count should only increment on an Ok response, instead of including invalid cities and errors (possibly using below 2 points as mechanisms).
-- A separate handler for rate limit count, instead of in middleware.
 - Global exception handling.
 - Logging information and errors.
 - Implement options pattern for configuration.
