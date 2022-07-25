@@ -28,21 +28,13 @@ namespace WeatherData
                 var weatherWithDescription = token.ToObject<List<Weather>>()
                     .Where(x => x.Description != null);
 
-                if (weatherWithDescription is null)
-                {
-                    return new List<string>();
-                }                    
-
                 return weatherWithDescription.Select(x => x.Description).ToList();
             }
-            else if (response.StatusCode == HttpStatusCode.NotFound)
+            if (response.StatusCode == HttpStatusCode.NotFound)
             {
                 throw new ArgumentException($"City ({city},{country}) not found");
             }
-            else
-            {
-                throw new HttpRequestException("Error calling OpenWweather API");
-            }
+            throw new HttpRequestException("Error calling OpenWeather API");
         }
     }
 }

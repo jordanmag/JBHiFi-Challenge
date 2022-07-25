@@ -89,13 +89,13 @@ namespace WeatherData.Tests
 
         private void ArrangeWeatherResponse(string description)
         {
-            _response = new()
+            _response = new HttpResponseMessage
             {
                 Content = JsonContent.Create(new
                 {
                     weather = new List<Weather>
                     {
-                        new Weather()
+                        new()
                         {
                             Id = 800,
                             Main = "clear",
@@ -109,13 +109,13 @@ namespace WeatherData.Tests
 
         private void ArrangeWeatherResponseWithNoDescription()
         {
-            _response = new()
+            _response = new HttpResponseMessage
             {
                 Content = JsonContent.Create(new
                 {
                     weather = new List<Weather>
                     {
-                        new Weather()
+                        new()
                         {
                             Id = 800,
                             Main = "clear",
@@ -126,8 +126,8 @@ namespace WeatherData.Tests
             };
         }
 
-        private void ArrangeNotFoundResponse() => _response = new () { StatusCode = HttpStatusCode.NotFound };
-        private void ArrangeServerErrorResponse() => _response = new() { StatusCode = HttpStatusCode.InternalServerError };
+        private void ArrangeNotFoundResponse() => _response = new HttpResponseMessage { StatusCode = HttpStatusCode.NotFound };
+        private void ArrangeServerErrorResponse() => _response = new HttpResponseMessage { StatusCode = HttpStatusCode.InternalServerError };
 
     }
 }

@@ -4,10 +4,11 @@ using WeatherData.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSingleton<IWeatherService, WeatherService>();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<IRateLimitManager, RateLimitManager>();
+builder.Services.AddSingleton<IWeatherService, WeatherService>();
 
 var app = builder.Build();
 

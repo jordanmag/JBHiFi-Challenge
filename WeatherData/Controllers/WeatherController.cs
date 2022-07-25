@@ -7,10 +7,12 @@ namespace WeatherData.Controllers
     public class WeatherController : ControllerBase
     {
         private readonly IWeatherService _weatherService;
+        private readonly IRateLimitManager _rateLimitManager;
 
-        public WeatherController(IWeatherService weatherService)
+        public WeatherController(IWeatherService weatherService, IRateLimitManager rateLimitManager)
         {
             _weatherService = weatherService;
+            _rateLimitManager = rateLimitManager;
         }
 
         [HttpGet("[action]")]
@@ -23,6 +25,7 @@ namespace WeatherData.Controllers
                 {
                     return NoContent();
                 }
+                _rateLimitManager.UpdateRateLimit(HttpContext.Request.Headers["ApiKey"]);
                 return Ok(description);
             }
             catch (ArgumentException ex)
